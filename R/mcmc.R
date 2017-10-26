@@ -22,14 +22,13 @@ match2sided <- function(iter, eps_alpha, eps_beta, frac_beta, frac_opp,
 
   # beta starting values (from 1-sided logit estimates)
   beta  <- matrix(0, p_i, n_j)   # employer preferences
-  for(j in 2:n_j) {
+  for(j in 1:n_j) {
     y <- as.numeric(opp[, j])
-    mod <- glm(y ~ one + educ + age + nonwhite - 1, family=binomial,
+    mod <- glm(y ~ . - 1, family=binomial,
                data=as.data.frame(xx) )
     beta[, j] <- mod$coef
   }
-  beta0 <- beta ## one-sided logit estimators
-  XB <- xx %*% beta           # worker side linear predictors (big matrix), n_i x n_j, same as opp
+  XB <- xx %*% beta # worker side linear predictors (big matrix), n_i x n_j, same as opp
 
   # mu, Sigma starting values
   mu_beta <- prior$mu_beta$mu
